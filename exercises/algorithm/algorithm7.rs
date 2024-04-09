@@ -112,7 +112,7 @@ fn bracket_match(bracket: &str) -> bool {
                     return false;
                 }
                 if let Some(&p) = s.peek() {
-                    if (p == '(' && c == ')') || (p == '{' && c == '}') || ( p == '[' && c == ']') {
+                    if (p == '(' && c == ')') || (p == '{' && c == '}') || (p == '[' && c == ']') {
                         s.pop();
                     }
                 }
