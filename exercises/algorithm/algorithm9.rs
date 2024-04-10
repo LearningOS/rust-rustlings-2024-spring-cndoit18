@@ -1,8 +1,7 @@
 /*
-	heap
-	This question requires you to implement a binary heap function
+    heap
+    This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -37,7 +36,16 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+        self.items.push(value);
+        self.count += 1;
+        let mut idx = self.count;
+        while self.parent_idx(idx) != 0
+            && (self.comparator)(&self.items[idx], &self.items[self.parent_idx(idx)])
+        {
+            let t = self.parent_idx(idx);
+            self.items.swap(idx, t);
+            idx = self.parent_idx(idx);
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -57,8 +65,22 @@ where
     }
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
-		0
+        if self.left_child_idx(idx) <= self.count && self.right_child_idx(idx) <= self.count {
+            if (self.comparator)(
+                &self.items[self.left_child_idx(idx)],
+                &self.items[self.right_child_idx(idx)],
+            ) {
+                return self.left_child_idx(idx);
+            }
+            return self.right_child_idx(idx);
+        }
+        if self.left_child_idx(idx) <= self.count {
+            return self.left_child_idx(idx);
+        }
+        if self.right_child_idx(idx) <= self.count {
+            return self.right_child_idx(idx);
+        }
+        idx
     }
 }
 
@@ -84,8 +106,21 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if !self.is_empty() {
+            self.items.swap(1, self.count);
+            let result = Some(self.items.remove(self.count));
+            self.count -= 1;
+            let mut idx = 1;
+            while self.children_present(idx)
+                && (self.comparator)(&self.items[self.smallest_child_idx(idx)], &self.items[idx])
+            {
+                let next = self.smallest_child_idx(idx);
+                self.items.swap(idx, next);
+                idx = next;
+            }
+            return result;
+        }
+        None
     }
 }
 
